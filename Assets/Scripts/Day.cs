@@ -1,21 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Day : MonoBehaviour
 {
 
     [SerializeField] private Transform mainCamera;
 
-    // Start is called before the first frame update
+    [SerializeField] private TMP_Text dayNumber;
+    [SerializeField] private TMP_Text dayName;
+
+
     void Start()
     {
+        // Find the camera
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        transform.LookAt(mainCamera);
+        // Always look at the camera
+        transform.LookAt(2 * transform.position - mainCamera.position);
+    }
+
+    public void AssignText(string dayOfMonth, string dayOfWeek, bool isToday)
+    {
+        // Assign text to the canvas elements
+        dayNumber.text = dayOfMonth;
+        dayName.text = dayOfWeek;
     }
 }

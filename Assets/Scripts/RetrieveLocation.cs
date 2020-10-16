@@ -1,22 +1,28 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RetrieveLocation : MonoBehaviour
 {
+
+    // Reference Unit Tester
+    [SerializeField] private WeatherLocationUnitTest weatherLocationUnitTest;
+    [SerializeField] private TMP_Text locationDebug;
 
     public string lat;
     public string lon;
 
     public bool done = false;
 
-    void Start()
+    public void StartFindingLocation()
     {
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            Debug.Log("Windows");
-            lat = "28.53";
-            lon = "-81.37";
+            // Check to see if testing parameters should be used
+            if (weatherLocationUnitTest.testLocation == true)
+            {
+                weatherLocationUnitTest.SetLocation();
+            }
             done = true;
         }
         else if(Application.platform == RuntimePlatform.Android)
@@ -24,10 +30,8 @@ public class RetrieveLocation : MonoBehaviour
             Debug.Log("Android");
             StartCoroutine(GetLocation());
         }
-        else
-        {
-            Debug.Log("???????????");
-        }
+
+        StartCoroutine(GetLocation());
     }
 
     IEnumerator GetLocation()
@@ -35,11 +39,15 @@ public class RetrieveLocation : MonoBehaviour
         Debug.Log("Actually started");
 
         // First, check if user has location service enabled
-        if (!Input.location.isEnabledByUser)
+        /*if (!Input.location.isEnabledByUser)
+        {
+            Debug.Log("LOCATION!?!?");
             yield break;
+        }*/
+            
 
         // Start service before querying location
-        Input.location.Start(500);
+        Input.location.Start(250);
 
         // Wait until service initializes
         int maxWait = 5;
@@ -59,14 +67,24 @@ public class RetrieveLocation : MonoBehaviour
         // Connection has failed
         if (Input.location.status == LocationServiceStatus.Failed)
         {
-            print("Unable to determine device location");
+            Debug.Log("Unable to determine device location");
             yield break;
         }
         else
         {
-            // Access granted and location value could be retrieved
-            print("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
+            //Debug.Log("Success");
         }
+
+        if(Input.location.status == LocationServiceStatus.Stopped)
+        {
+            // Access granted and location value could be retrieved            
+            lat = Input.location.lastData.latitude.ToString("F2");
+            lon = Input.location.lastData.longitude.ToString("F2");
+            Debug.Log(Input.location.lastData.longitude);
+            locationDebug.text = lat + " : " + lon;
+        }
+
+        Debug.Log("End of GetLocation routine");
 
         // Stop service if there is no need to query location updates continuously
         done = true;

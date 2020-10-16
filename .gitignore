@@ -1,0 +1,19 @@
+#Ignore the StorePlugins folder as it contains large amounts of data
+StorePlugins/
+
+#Ignore Unity Generated
+Temp/
+Library/
+Builds/
+
+#Ignore Visual Studio Generated
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+*.user
+*.unityproj
+
+#ignore keystores
+*.keystore

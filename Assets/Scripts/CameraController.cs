@@ -11,26 +11,47 @@ public class CameraController : MonoBehaviour
 
     private bool mouseDown;
     private float previousPosition;
-    private float currentPosition; 
+    private float currentPosition;
+
+    public bool ended = false;
 
     void Update()
     {
-        currentPosition = Input.mousePosition.x;
+        // PC
+        /*currentPosition = Input.mousePosition.x;
         if (Input.GetMouseButton(0))
-        {
-            
-
+        {            
             float angle = (previousPosition - currentPosition) * Mathf.PI * rotationSpeed;
-            transform.RotateAround(player.transform.position, -Vector3.up, angle);
-
-            
+            transform.RotateAround(player.transform.position, -Vector3.up, angle);            
         }
         previousPosition = Input.mousePosition.x;
+        */
 
-        /*if (Input.GetMouseButtonUp(0))
+        // Mobile
+        if (Input.touchCount > 0)
         {
-            previousPosition = Input.mousePosition.x;
-        }*/
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                if (ended)
+                {
+                    previousPosition = touch.position.x;
+                    ended = false;
+                }
+
+                currentPosition = touch.position.x;
+                float angle = (previousPosition - currentPosition) * Mathf.PI * rotationSpeed;
+                transform.RotateAround(player.transform.position, -Vector3.up, angle);
+                previousPosition = touch.position.x;
+            }
+
+            if (touch.phase == TouchPhase.Ended)
+            {
+                ended = true;
+            }
+        }
+
     }
 
 }
