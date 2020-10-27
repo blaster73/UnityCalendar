@@ -18,6 +18,9 @@ public class UI_Slider : EventTrigger
 
     public void Start()
     {
+        // Find upperYLimit by referencing object in canvas
+        upperYLimit = GameObject.Find("upperYLimit").transform.position.y;
+
         // Calculate start y, total distance y can move, and current threshold for lerping
         startingPos = transform.position;
         yDistance = (upperYLimit - startingPos.y);

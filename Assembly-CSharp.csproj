@@ -66,7 +66,9 @@
     <Compile Include="Assets\Scripts\Calendar.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Day.cs" />
+    <Compile Include="Assets\Scripts\GetLocationPermission.cs" />
     <Compile Include="Assets\Scripts\MainCanvas.cs" />
+    <Compile Include="Assets\Scripts\RetrieveHourlyWeather.cs" />
     <Compile Include="Assets\Scripts\RetrieveLocation.cs" />
     <Compile Include="Assets\Scripts\RetrieveWeather.cs" />
     <Compile Include="Assets\Scripts\UI_Slider.cs" />

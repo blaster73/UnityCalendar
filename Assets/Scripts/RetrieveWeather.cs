@@ -10,6 +10,12 @@ public class RetrieveWeather : MonoBehaviour
     // Reference the script that gets user coordinates
     [SerializeField] private RetrieveLocation retrieveLocation;
 
+    // Reference hourly weather
+    [SerializeField] private RetrieveHourlyWeather retrieveHourlyWeather;
+
+    // Reference the script that checks user location permission
+    [SerializeField] private GetLocationPermission getLocationPermission;
+
     // Reference the weather particle script
     [SerializeField] private WeatherParticle weatherParticle;
 
@@ -37,7 +43,7 @@ public class RetrieveWeather : MonoBehaviour
 
     private void Start()
     {
-        GetWeather();
+        //GetWeather();
         debugTextTop.text = "Started Get Weather";
     }
 
@@ -50,9 +56,12 @@ public class RetrieveWeather : MonoBehaviour
     // GET weather JSON for user coordinates using web request
     IEnumerator GetWeatherRoutine()
     {
-
-        retrieveLocation.StartFindingLocation();
-
+        // If location access start getting GPS location
+        if (getLocationPermission.locationEnabled == true)
+        {
+            retrieveLocation.StartFindingLocation();
+        }
+        
         // Hold until weather location information is received
         int maxWait = 20;
         while (retrieveLocation.done == false && maxWait > 0)
@@ -64,10 +73,12 @@ public class RetrieveWeather : MonoBehaviour
 
         string url = baseUrl + retrieveLocation.lat + preLon + retrieveLocation.lon + preKey + apiKey;
 
+        // Start web request
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 
-        if(request.isDone)
+        // If location access and actual location are available
+        if(request.isDone && getLocationPermission.locationEnabled == true)
         {
             //intro.SetActive(false);
             intro.GetComponent<Animator>().SetTrigger("Fade");
@@ -76,6 +87,9 @@ public class RetrieveWeather : MonoBehaviour
         Debug.Log(request.downloadHandler.text);
         debugText.text = request.downloadHandler.text;
         ParseWeatherData(request.downloadHandler.text);
+
+        // Start getting hourly weather
+        retrieveHourlyWeather.GetHourlyWeather(retrieveLocation.lat, retrieveLocation.lon);
     }
 
     void ParseWeatherData(string weatherData)

@@ -36,18 +36,8 @@ public class RetrieveLocation : MonoBehaviour
 
     IEnumerator GetLocation()
     {
-        Debug.Log("Actually started");
-
-        // First, check if user has location service enabled
-        /*if (!Input.location.isEnabledByUser)
-        {
-            Debug.Log("LOCATION!?!?");
-            yield break;
-        }*/
-            
-
         // Start service before querying location
-        Input.location.Start(250);
+        Input.location.Start(500);
 
         // Wait until service initializes
         int maxWait = 5;
